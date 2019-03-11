@@ -7,6 +7,17 @@
   color: #FFFFFF;
 }
 
+.group-name {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.image {
+  /*object-fit: cover;*/
+  /*height: 100px;*/
+  width: 100px;
+}
+
 gridster {
   background: none;
 }

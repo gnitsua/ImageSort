@@ -22,7 +22,7 @@ class ImageItem implements GridsterItem {
     this.cols = 1;
     this.rows = 1;
     this.compactEnabled = false;
-    this.dragEnabled = true;
+    this.dragEnabled = false;
     this.maxItemArea = 1;
     this.maxItemCols = 1;
     this.maxItemRows = 1;

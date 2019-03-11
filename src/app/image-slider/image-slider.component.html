@@ -1,7 +1,20 @@
-<div >
-  <perfect-scrollbar cdkDropList  style="max-height: 100vh;"  [config]="config"> <!-- TODO: this 100vh could cause issues down the line -->
-      <div cdkDrag (press)="console.log($event)" [cdkDragDisabled]="true" class="image" *ngFor="let image of images">
-        <img src="{{image.url}}" alt="{{image.id}}" class="img-thumbnail">
+<div>
+  <perfect-scrollbar cdkDropList [cdkDropListData]="images" (cdkDropListDropped)=drop($event)
+                     style="max-height: 100vh;" [config]="config">
+    <!-- TODO: this 100vh could cause issues down the line -->
+    <div cdkDrag
+         [cdkDragData]="image"
+         cdkDragRootElement=".image-container"
+         *ngFor="let image of images;">
+      <div class="image-container">
+        <!--<span class="glyphicon glyphicon-trash glyph"></span>-->
+
+        <img src="{{image.image.url}}" alt="{{image.image.id}}" class="img-thumbnail">
+        <div cdkDragHandle class="drag-icon">
+          <fa name="bars"></fa>
+        </div>
+
       </div>
+    </div>
   </perfect-scrollbar>
 </div>

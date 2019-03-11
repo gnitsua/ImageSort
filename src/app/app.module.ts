@@ -23,6 +23,8 @@ import {GroupComponent} from './group/group.component';
 import {PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { GridsterModule } from 'angular-gridster2';
+import { ImageComponent } from './image/image.component';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -39,6 +41,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PerfectScrollbarModule,
     DragDropModule,
     GridsterModule,
+    AngularFontAwesomeModule,
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.
@@ -55,7 +58,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HeroSearchComponent,
     GroupComponent,
     ImageSortComponent,
-    ImageSliderComponent
+    ImageSliderComponent,
+    ImageComponent
   ],
   bootstrap: [AppComponent],
   providers: [
