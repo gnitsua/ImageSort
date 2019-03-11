@@ -1,12 +1,12 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DashboardComponent } from './dashboard.component';
-import { HeroSearchComponent } from '../hero-search/hero-search.component';
+import {DashboardComponent} from './dashboard.component';
+import {HeroSearchComponent} from '../hero-search/hero-search.component';
 
-import { RouterTestingModule } from '@angular/router/testing';
-import { of } from 'rxjs';
-import { HEROES } from '../mock-heroes';
-import { HeroService } from '../hero.service';
+import {RouterTestingModule} from '@angular/router/testing';
+import {of} from 'rxjs';
+import {HEROES} from '../mock-heroes';
+import {HeroService} from '../services/hero.service';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -15,8 +15,8 @@ describe('DashboardComponent', () => {
   let getHeroesSpy;
 
   beforeEach(async(() => {
-    heroService = jasmine.createSpyObj('HeroService', ['getHeroes']);
-    getHeroesSpy = heroService.getHeroes.and.returnValue( of(HEROES) );
+    heroService = jasmine.createSpyObj('HeroService', ['getImages']);
+    getHeroesSpy = heroService.getImages.and.returnValue(of(HEROES));
     TestBed.configureTestingModule({
       declarations: [
         DashboardComponent,
@@ -26,10 +26,10 @@ describe('DashboardComponent', () => {
         RouterTestingModule.withRoutes([])
       ],
       providers: [
-        { provide: HeroService, useValue: heroService }
+        {provide: HeroService, useValue: heroService}
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
   }));
 
@@ -49,7 +49,7 @@ describe('DashboardComponent', () => {
 
   it('should call heroService', async(() => {
     expect(getHeroesSpy.calls.any()).toBe(true);
-    }));
+  }));
 
   it('should display 4 links', async(() => {
     expect(fixture.nativeElement.querySelectorAll('a').length).toEqual(4);

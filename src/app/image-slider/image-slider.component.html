@@ -1,0 +1,7 @@
+<div>
+  <perfect-scrollbar style="max-height: 100vh;" [config]="config"> <!-- TODO: this 100vh could cause issues down the line -->
+      <div class="image" *ngFor="let image of images">
+        <img src="{{image.url}}" alt="{{image.id}}" class="img-fluid">
+      </div>
+  </perfect-scrollbar>
+</div>
