@@ -1,12 +1,22 @@
-<div class="group">
+<div class="group" [ngStyle]="{'background-color':color}">
   <div class="group-name row">
-    <h1 class="col-3">Cute</h1>
+    <div *ngIf="name; then thenTemplateName else elseTemplateName" class="col-3">
+
+    </div>
     <div class="col-8">
       &nbsp;
     </div>
     <div class="col-1" style="padding-top: 12.5px">
-      <fa size="lg" name="plus" ></fa>
+      <fa size="lg" name="plus"></fa>
     </div>
+
+    <ng-template #thenTemplateName>
+      <h1>{{name}}</h1>
+    </ng-template>
+
+    <ng-template #elseTemplateName>
+      <h1>Group</h1>
+    </ng-template>
 
 
   </div>
@@ -18,7 +28,7 @@
     <!--<img src="{{image.url}}" alt="{{image.id}}" class="img-thumbnail">-->
     <!--</gridster-item>-->
     <!--</gridster>-->
-    <div cdkDrag [cdkDragData]="item" class="image p-2" *ngFor="let image of images">
+    <div cdkDrag [cdkDragData]="image" class="image p-2" *ngFor="let image of images">
       <img src="{{image.image.url}}" alt="{{image.image.id}}" class="img-thumbnail">
     </div>
   </div>

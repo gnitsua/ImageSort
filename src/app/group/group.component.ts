@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ImagesService} from '../services/images.service';
 import {GridsterConfig} from 'angular-gridster2';
 import {ImageItem} from '../models/image-item';
@@ -12,8 +12,10 @@ import {CdkDragDrop} from '@angular/cdk/drag-drop';
 })
 export class GroupComponent implements OnInit {
 
+  @Input() name: string;
   images: ImageItem[];
   options: GridsterConfig;
+  @Input() color:string;
 
   static itemChange(item, itemComponent) {
     console.log('itemChanged', item, itemComponent);
@@ -48,7 +50,7 @@ export class GroupComponent implements OnInit {
       compactType: 'compactLeft&Up',
       displayGrid: 'none'
     };
-    this.images = []
+    this.images = [];
 
   }
 
@@ -60,28 +62,28 @@ export class GroupComponent implements OnInit {
     this.images.splice(this.images.indexOf(item), 1);
   }
 
-  addItem(image:Image) {
+  addItem(image: Image) {
     // this.images.push(new ImageItem(image));
   }
 
   getImages(): void {
     this.imageService.getImages()
-      .subscribe(images => this.images = images.map( image => new ImageItem(image)));
+      .subscribe(images => this.images = images.map(image => new ImageItem(image)));
   }
 
   drop(event: CdkDragDrop<ImageItem[]>) {
     if (event.previousContainer !== event.container) {
       // console.log(event.previousContainer.data)
-      this.transferArrayItem(event.previousContainer.data,event.container.data,
-        event.previousIndex, event.currentIndex)
+      this.transferArrayItem(event.previousContainer.data, event.container.data,
+        event.previousIndex, event.currentIndex);
     } else {
       this.array_move(this.images, event.previousIndex, event.currentIndex);
     }
   }
 
-  transferArrayItem(srcContainer:Array<ImageItem>,dstContainer:Array<ImageItem>,srcIndex:number,dstIndex:number){
-    const item = srcContainer.splice(srcIndex,1)[0]
-    dstContainer.splice(dstIndex,0,item)
+  transferArrayItem(srcContainer: Array<ImageItem>, dstContainer: Array<ImageItem>, srcIndex: number, dstIndex: number) {
+    const item = srcContainer.splice(srcIndex, 1)[0];
+    dstContainer.splice(dstIndex, 0, item);
   }
 
   array_move(arr, old_index, new_index) {

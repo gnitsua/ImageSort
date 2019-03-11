@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ImageSortComponent implements OnInit {
 
+  groups:string[];
+  colors:string[];
+
   constructor() { }
 
   ngOnInit() {
+    this.groups = ["Goats","Sheep"]
+    this.colors = ["#A1BF36","#482667","#F28627","#039FE3","FF4C96"]
   }
 
 }
