@@ -6,3 +6,11 @@
   margin-bottom: 20px;
   color: #FFFFFF;
 }
+
+gridster {
+  background: none;
+}
+
+gridster-item {
+  background: none;
+}

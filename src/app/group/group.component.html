@@ -1,3 +1,17 @@
-<div class="group container">
-<h1>Cute</h1>
+<div cdkDropList class="group">
+  <div class="group-name row">
+    <h1>Cute</h1>
+  </div>
+
+  <div  class="row" style="height: 250px;">
+    <gridster cdkDropList [options]="options">
+      <gridster-item [item]="image" *ngFor="let image of images">
+        <img src="{{image.url}}" alt="{{image.id}}" class="img-thumbnail">
+      </gridster-item>
+    </gridster>
+    <!--<div cdkDrag class="image col-3" *ngFor="let image of images">-->
+    <!--<img src="{{image.url}}" alt="{{image.id}}" class="img-thumbnail">-->
+    <!--</div>-->
+
+  </div>
 </div>
