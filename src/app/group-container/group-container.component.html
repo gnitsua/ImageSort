@@ -1,0 +1,13 @@
+<gridster [options]="options" style="width: 100%;height: 100%">
+  <gridster-item [item]="item" *ngFor="let item of groups">
+    <app-group [name]="item.name"
+               [color]="item.color"
+               [images]="item.color"
+               [x]="0"
+               [y]="0"
+               [rows]="0"
+               [cols]="0">
+
+    </app-group>
+  </gridster-item>
+</gridster>

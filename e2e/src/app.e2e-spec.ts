@@ -55,8 +55,8 @@ describe('Tutorial part 6', () => {
       navElts: navElts,
 
       appDashboardHref: navElts.get(0),
-      appDashboard: element(by.css('app-root app-dashboard')),
-      topHeroes: element.all(by.css('app-root app-dashboard > div h4')),
+      appDashboard: element(by.css('app-root app-groups')),
+      topHeroes: element.all(by.css('app-root app-groups > div h4')),
 
       appHeroesHref: navElts.get(1),
       appHeroes: element(by.css('app-root app-heroes')),
@@ -86,7 +86,7 @@ describe('Tutorial part 6', () => {
       expect(viewNames).toEqual(expectedViewNames);
     });
 
-    it('has dashboard as the active view', () => {
+    it('has groups as the active view', () => {
       let page = getPageElts();
       expect(page.appDashboard.isPresent()).toBeTruthy();
     });

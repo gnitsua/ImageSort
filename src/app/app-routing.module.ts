@@ -8,7 +8,7 @@ import {ImageSortComponent} from './image-sort/image-sort.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/sort', pathMatch: 'full'},
-  // {path: 'dashboard', component: DashboardComponent},
+  // {path: 'groups', component: DashboardComponent},
   // {path: 'detail/:id', component: HeroDetailComponent},
   // {path: 'heroes', component: HeroesComponent},
   {path: 'sort', component: ImageSortComponent}

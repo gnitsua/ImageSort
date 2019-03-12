@@ -18,13 +18,14 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ImageSortComponent} from './image-sort/image-sort.component';
 import {ImageSliderComponent} from './image-slider/image-slider.component';
 
-import {GroupComponent} from './group/group.component';
+import {GroupContainerComponent} from './group-container/group-container.component';
 
 import {PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { GridsterModule } from 'angular-gridster2';
 import { ImageComponent } from './image/image.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import {GroupComponent} from './group/group.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -56,10 +57,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HeroDetailComponent,
     MessagesComponent,
     HeroSearchComponent,
-    GroupComponent,
+    GroupContainerComponent,
     ImageSortComponent,
     ImageSliderComponent,
-    ImageComponent
+    ImageComponent,
+    GroupComponent
   ],
   bootstrap: [AppComponent],
   providers: [
