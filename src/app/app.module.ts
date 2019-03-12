@@ -27,6 +27,8 @@ import { ImageComponent } from './image/image.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import {GroupComponent} from './group/group.component';
 
+
+
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };

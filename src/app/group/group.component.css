@@ -10,3 +10,11 @@
   margin-left: 0px;
   margin-right: 0px;
 }
+
+.lighten {
+  filter: grayscale(75%) brightness(150%);
+}
+.double-lighten {
+  filter: grayscale(85%) brightness(175%);
+}
+

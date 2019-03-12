@@ -1,6 +1,6 @@
-<div class="group" [ngStyle]="{'background-color':color}">
+<div [ngClass]="['group','group lighten','group double-lighten'][level]" [ngStyle]="{'background-color':color}">
   <div class="d-flex">
-    <div class="p-2"><h1>{{name}}</h1></div>
+    <div class="p-2"><h2>{{name}}</h2></div>
     <div class="ml-auto p-2 align-self-center">
       <fa name="plus" size="lg"></fa>
     </div>

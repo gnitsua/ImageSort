@@ -9,4 +9,5 @@ export class Group {
   y: number;
   cols: number;
   rows: number;
+  level: number;
 }

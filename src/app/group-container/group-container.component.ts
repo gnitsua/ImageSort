@@ -6,6 +6,7 @@ import {Image} from '../models/Image';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Group} from '../models/group';
 
+
 @Component({
   selector: 'app-group-container',
   templateUrl: './group-container.component.html',
@@ -13,7 +14,7 @@ import {Group} from '../models/group';
 })
 export class GroupContainerComponent implements OnInit {
 
-  colors = ['#A1BF36', '#482667', '#F28627', '#039FE3', 'FF4C96'];
+  colors = ['#A1BF36', '#482667', '#F28627', '#039FE3', '#FF4C96'];
   options: GridsterConfig;
   groups: Array<Group>;
 
@@ -37,13 +38,21 @@ export class GroupContainerComponent implements OnInit {
       margin: 10,
       gridType: 'fit',
       mobileBreakpoint: 100,
-      minRows: 6,
+      minRows: 8,
       minCols: 4,
       compactType: 'compactLeft&Up',
-      displayGrid: 'always'
+      displayGrid: 'none'
     };
     this.groups = [
-      {name: 'Goats', color: this.colors[0], images: [], x: 0, y: 0, rows: 6, cols: 4}
+      {name: 'Goats', level: 0, color: this.colors[3], images: [], x: 0, y: 0, rows: 2, cols: 2},
+      {name: 'Big Goats', level: 1, color: this.colors[3], images: [], x: 0, y: 0, rows: 1, cols: 2},
+      {name: 'Scary Goats', level: 2, color: this.colors[3], images: [], x: 0, y: 0, rows: 1, cols: 2},
+      {name: 'Sheep', level: 0, color: this.colors[1], images: [], x: 0, y: 0, rows: 2, cols: 2},
+      {name: 'Big Sheep', level: 1, color: this.colors[1], images: [], x: 0, y: 0, rows: 2, cols: 2},
+      {name: 'Puppies', level: 0, color: this.colors[2], images: [], x: 0, y: 0, rows: 2, cols: 4},
+      {name: 'Sheep', level: 0, color: this.colors[0], images: [], x: 0, y: 0, rows: 2, cols: 2},
+      {name: 'Big Sheep', level: 1, color: this.colors[0], images: [], x: 0, y: 0, rows: 2, cols: 2},
+
 
     ];
 

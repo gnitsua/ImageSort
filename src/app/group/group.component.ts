@@ -9,12 +9,13 @@ import {GridsterItem, GridsterItemComponentInterface} from 'angular-gridster2';
 })
 export class GroupComponent implements OnInit, GridsterItem {
   @Input() name: string;
-  @Input() color: string;
+  @Input() color: number[]; //TODO: make class
   @Input() images: ImageItem[];
   @Input() x: number;
   @Input() y: number;
   @Input() cols: number;
   @Input() rows: number;
+  @Input() level: number;
   compactEnabled: boolean;
   dragEnabled: boolean;
   initCallback: (item: GridsterItem, itemComponent: GridsterItemComponentInterface) => void;
