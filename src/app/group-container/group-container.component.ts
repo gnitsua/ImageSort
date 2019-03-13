@@ -5,6 +5,8 @@ import {ImageItem} from '../models/image-item';
 import {Image} from '../models/Image';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Group} from '../models/group';
+import {HSLColor} from '../models/HSLColor';
+import {GroupItem} from '../models/group-item';
 
 
 @Component({
@@ -14,16 +16,36 @@ import {Group} from '../models/group';
 })
 export class GroupContainerComponent implements OnInit {
 
-  colors = ['#A1BF36', '#482667', '#F28627', '#039FE3', '#FF4C96'];
+  colors = [
+    ['#A1BF36'],
+    ['#482667'],
+    ['#F28627'],
+    ['#039FE3'],
+    ['#FF4C96']];
+
+
+  hslColors = [
+    new HSLColor(73, 56, 48),
+    new HSLColor(271, 46, 28),
+    new HSLColor(28, 89, 55),
+    new HSLColor(198, 97, 45),
+    new HSLColor(335, 100, 65),
+  ];
+
+  tempStruture = [];
+
   options: GridsterConfig;
-  groups: Array<Group>;
+  groups: Array<GroupItem>;
+
+  rows = 8;
+  cols = 4;
 
   static itemChange(item, itemComponent) {
-    console.log('itemChanged', item, itemComponent);
+    // console.log('itemChanged', item, itemComponent);
   }
 
   static itemResize(item, itemComponent) {
-    console.log('itemResized', item, itemComponent);
+    // console.log('itemResized', item, itemComponent);
   }
 
 
@@ -38,23 +60,79 @@ export class GroupContainerComponent implements OnInit {
       margin: 10,
       gridType: 'fit',
       mobileBreakpoint: 100,
-      minRows: 8,
-      minCols: 4,
+      minRows: this.rows,
+      maxRows: this.rows,
+      minCols: this.cols,
+      maxCols: this.cols,
       compactType: 'compactLeft&Up',
       displayGrid: 'none'
     };
-    this.groups = [
-      {name: 'Goats', level: 0, color: this.colors[3], images: [], x: 0, y: 0, rows: 2, cols: 2},
-      {name: 'Big Goats', level: 1, color: this.colors[3], images: [], x: 0, y: 0, rows: 1, cols: 2},
-      {name: 'Scary Goats', level: 2, color: this.colors[3], images: [], x: 0, y: 0, rows: 1, cols: 2},
-      {name: 'Sheep', level: 0, color: this.colors[1], images: [], x: 0, y: 0, rows: 2, cols: 2},
-      {name: 'Big Sheep', level: 1, color: this.colors[1], images: [], x: 0, y: 0, rows: 2, cols: 2},
-      {name: 'Puppies', level: 0, color: this.colors[2], images: [], x: 0, y: 0, rows: 2, cols: 4},
-      {name: 'Sheep', level: 0, color: this.colors[0], images: [], x: 0, y: 0, rows: 2, cols: 2},
-      {name: 'Big Sheep', level: 1, color: this.colors[0], images: [], x: 0, y: 0, rows: 2, cols: 2},
 
-
+    let groupsJson = [
+      {
+        name: 'Regular Goats', color: this.hslColors[0], images: [], child:
+          {
+            name: 'Big Goats', color: this.hslColors[0], images: [], child:
+              {
+                name: 'Scary Goats',
+                color: this.hslColors[0],
+                images: [],
+                child:
+                  {
+                    name: 'Scary and Hairy Goats',
+                    color: this.hslColors[0],
+                    images: [],
+                    child: undefined
+                  },
+              }
+          }
+      },
+      {
+        name: 'Sheep',
+        color: this.hslColors[1],
+        images: [],
+        child: {
+          name: 'Big Sheep', color: HSLColor.getLightened(this.hslColors[1]), images: [], child: undefined
+        }
+      }
     ];
+
+    this.groups = [];
+    const numGroups = groupsJson.length;
+    const rootHeight = Math.floor(this.rows / numGroups);//how many columns can we fit and use all of the available rows
+    groupsJson.forEach((groupJson, groupNumber) =>
+      this.groups = this.groups.concat(this.groupsToGroupItemList(groupJson, rootHeight * groupNumber, 0, rootHeight, this.cols, 0)));
+
+    console.log(this.groups);
+  }
+
+  private groupsToGroupItemList(group: Group, x: number, y: number, rows: number, cols: number, level: number): GroupItem[] {
+    console.log(group.name);
+    if (group === undefined) {
+      return [];
+    } else {
+      let result = [];
+      console.log(group.child === undefined);
+      if (group.child === undefined) {
+        //If there is not child just create an item that takes up the entire space
+        result.push(new GroupItem(group.name, group.color, group.images, group.child, level, x, y, rows, cols));
+      } else {
+        //Otherwise split the space in 2 and recursively call the function on the child (which will return on or many items)
+        if (level % 2 !== 0) {// for even levels, split horizontally
+          result.push(new GroupItem(group.name, group.color, group.images, group.child, level, x, y, Math.floor(rows / 2), cols));
+          group.child.color = HSLColor.getLightened(group.color);
+          result = result.concat(this.groupsToGroupItemList(group.child, x + Math.floor(rows / 2), y, Math.floor(rows / 2), cols, level + 1));
+        } else {
+          result.push(new GroupItem(group.name, group.color, group.images, group.child, level, x, y, rows, Math.floor(cols / 2)));
+          group.child.color = HSLColor.getLightened(group.color);
+          result = result.concat(this.groupsToGroupItemList(group.child, x, y + Math.floor(cols / 2), rows, Math.floor(cols / 2), level + 1));
+        }
+
+
+      }
+      return result;
+    }
+
 
   }
 

@@ -1,13 +1,16 @@
-import {Input} from '@angular/core';
 import {ImageItem} from './image-item';
+import {HSLColor} from './HSLColor';
 
 export class Group {
   name: string;
-  color: string;
+  color: HSLColor;
   images: ImageItem[];
-  x: number;
-  y: number;
-  cols: number;
-  rows: number;
-  level: number;
+  child: Group;
+
+  constructor(name: string, color: HSLColor, images: ImageItem[], child: Group) {
+    this.name = name;
+    this.color = color;
+    this.images = images;
+    this.child = child;
+  }
 }

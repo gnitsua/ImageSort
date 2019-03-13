@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ImageItem} from '../models/image-item';
 import {GridsterItem, GridsterItemComponentInterface} from 'angular-gridster2';
+import {HSLColor} from '../models/HSLColor';
 
 @Component({
   selector: 'app-group',
@@ -9,8 +10,9 @@ import {GridsterItem, GridsterItemComponentInterface} from 'angular-gridster2';
 })
 export class GroupComponent implements OnInit, GridsterItem {
   @Input() name: string;
-  @Input() color: number[]; //TODO: make class
+  @Input() color: HSLColor;
   @Input() images: ImageItem[];
+  @Input() hasChildren: boolean;
   @Input() x: number;
   @Input() y: number;
   @Input() cols: number;

@@ -1,20 +1,28 @@
 .group {
   border-radius: 12px;
-  padding: 20px;
+  padding: 5px;
   color: #FFFFFF;
   width: 100%;
   height: 100%;
 }
 
 .group-name {
-  margin-left: 0px;
-  margin-right: 0px;
+  font-size: 1.5rem;
+  font-weight: 500;
 }
 
-.lighten {
-  filter: grayscale(75%) brightness(150%);
-}
-.double-lighten {
-  filter: grayscale(85%) brightness(175%);
+.small-group-name {
+  font-size: 1rem;
+  font-weight: 500;
+
 }
 
+.x-small-group-name {
+  font-size: 0.5rem;
+  font-weight: 500;
+  color: #888888;
+}
+
+.disabled {
+  opacity: 0.5;
+}
