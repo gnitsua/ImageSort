@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {ImagesService} from '../services/images.service';
 import {GridsterConfig} from 'angular-gridster2';
 import {ImageItem} from '../models/image-item';
-import {Image} from '../models/Image';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Group} from '../models/group';
 import {HSLColor} from '../models/HSLColor';
@@ -64,22 +63,25 @@ export class GroupContainerComponent implements OnInit {
       maxRows: this.rows,
       minCols: this.cols,
       maxCols: this.cols,
-      compactType: 'compactLeft&Up',
+      // compactType: 'compactLeft&Up',
+      compactType: 'none',
       displayGrid: 'none'
     };
 
-    let groupsJson = [
+    const groupsJson = [
       {
-        name: 'Regular Goats', color: this.hslColors[0], images: [], child:
+        name: 'Regular Goats', id: '1', color: this.hslColors[0], images: [], child:
           {
-            name: 'Big Goats', color: this.hslColors[0], images: [], child:
+            name: 'Big Goats', id: '2', color: this.hslColors[0], images: [], child:
               {
                 name: 'Scary Goats',
+                id: '3',
                 color: this.hslColors[0],
                 images: [],
                 child:
                   {
                     name: 'Scary and Hairy Goats',
+                    id: '4',
                     color: this.hslColors[0],
                     images: [],
                     child: undefined
@@ -89,17 +91,18 @@ export class GroupContainerComponent implements OnInit {
       },
       {
         name: 'Sheep',
+        id: '5',
         color: this.hslColors[1],
         images: [],
         child: {
-          name: 'Big Sheep', color: HSLColor.getLightened(this.hslColors[1]), images: [], child: undefined
+          name: 'Big Sheep', id: '6', color: HSLColor.getLightened(this.hslColors[1]), images: [], child: undefined
         }
       }
     ];
 
     this.groups = [];
     const numGroups = groupsJson.length;
-    const rootHeight = Math.floor(this.rows / numGroups);//how many columns can we fit and use all of the available rows
+    const rootHeight = Math.floor(this.rows / numGroups); // how many columns can we fit and use all of the available rows
     groupsJson.forEach((groupJson, groupNumber) =>
       this.groups = this.groups.concat(this.groupsToGroupItemList(groupJson, rootHeight * groupNumber, 0, rootHeight, this.cols, 0)));
 
@@ -114,16 +117,16 @@ export class GroupContainerComponent implements OnInit {
       let result = [];
       console.log(group.child === undefined);
       if (group.child === undefined) {
-        //If there is not child just create an item that takes up the entire space
-        result.push(new GroupItem(group.name, group.color, group.images, group.child, level, x, y, rows, cols));
+        // If there is not child just create an item that takes up the entire space
+        result.push(new GroupItem(group.name, group.id, group.color, group.images, group.child, level, x, y, rows, cols));
       } else {
-        //Otherwise split the space in 2 and recursively call the function on the child (which will return on or many items)
+        // Otherwise split the space in 2 and recursively call the function on the child (which will return on or many items)
         if (level % 2 !== 0) {// for even levels, split horizontally
-          result.push(new GroupItem(group.name, group.color, group.images, group.child, level, x, y, Math.floor(rows / 2), cols));
+          result.push(new GroupItem(group.name, group.id, group.color, group.images, group.child, level + 1, x, y, Math.floor(rows / 2), cols));
           group.child.color = HSLColor.getLightened(group.color);
           result = result.concat(this.groupsToGroupItemList(group.child, x + Math.floor(rows / 2), y, Math.floor(rows / 2), cols, level + 1));
         } else {
-          result.push(new GroupItem(group.name, group.color, group.images, group.child, level, x, y, rows, Math.floor(cols / 2)));
+          result.push(new GroupItem(group.name, group.id, group.color, group.images, group.child, level + 1, x, y, rows, Math.floor(cols / 2)));
           group.child.color = HSLColor.getLightened(group.color);
           result = result.concat(this.groupsToGroupItemList(group.child, x, y + Math.floor(cols / 2), rows, Math.floor(cols / 2), level + 1));
         }
@@ -140,12 +143,60 @@ export class GroupContainerComponent implements OnInit {
     this.options.api.optionsChanged();
   }
 
-  removeItem(item) {
-    // this.images.splice(this.images.indexOf(item), 1);
+  removeItem(groupId: string) {
+    for (let i = 0; i < this.groups.length; i++) {
+      console.log(this.groups[i].id);
+      console.log(groupId)
+      if (this.groups[i].id === groupId) {
+        console.assert(this.groups[i].child === undefined);//should never be able to delete a group with a child
+        const group_to_delete = this.groups[i];// save it so we can use it's information after we delete it
+        this.groups.splice(i, 1);//delete it first because we need to have room in the grid
+        if (i == 0) {//special case for deleting the top left
+
+        } else if (this.groups[i - 1].level <= group_to_delete.level) {// if is parent
+          const oldParent = this.groups[i - 1];
+          if (this.groups[i - 1].level % 2 !== 0) {
+            this.groups.splice(i - 1, 1, new GroupItem(oldParent.name, oldParent.id, oldParent.color, oldParent.images, undefined, oldParent.level, oldParent.x, oldParent.y, oldParent.rows, oldParent.cols * 2));
+          } else {
+            this.groups.splice(i - 1, 1, new GroupItem(oldParent.name, oldParent.id, oldParent.color, oldParent.images, undefined, oldParent.level, oldParent.x, oldParent.y, oldParent.rows * 2, oldParent.cols));
+          }
+        } else {
+          //TODO: resize the entire previous group
+        }
+        break; // stop the for loop
+      }
+    }
   }
 
-  addItem(image: Image) {
-    // this.images.push(new ImageItem(image));
+  addItem(groupId: string) {
+    for (let i = 0; i < this.groups.length; i++) {
+      console.log(this.groups[i].id);
+      if (this.groups[i].id === groupId) {
+        console.assert(this.groups[i].child === undefined);//should never be able to delete a group with a child
+        const group_to_shrink = this.groups[i];// save it so we can use it's information after we delete it
+        if (i == 0) {//special case for deleting the top left
+
+        } else if (this.groups[i - 1].level <= group_to_shrink.level) {// if is parent
+          const oldParent = this.groups[i];
+
+          if (this.groups[i - 1].level % 2 !== 0) {
+            const newChild = new GroupItem('Group', oldParent.id + '-child', HSLColor.getLightened(oldParent.color), [], undefined, oldParent.level + 1, oldParent.x + Math.floor(oldParent.rows / 2), oldParent.y, Math.floor(oldParent.rows / 2), oldParent.cols);
+            this.groups.splice(i, 1,
+              new GroupItem(oldParent.name, oldParent.id, oldParent.color, oldParent.images, newChild, oldParent.level + 1, oldParent.x, oldParent.y, Math.floor(oldParent.rows / 2), oldParent.cols),
+              newChild);
+          } else {
+            const newChild = new GroupItem('Group', oldParent.id + '-child', HSLColor.getLightened(oldParent.color), [], undefined, oldParent.level + 1, oldParent.x, oldParent.y + Math.floor(oldParent.cols / 2), oldParent.rows, Math.floor(oldParent.cols / 2));
+            this.groups.splice(i, 1,
+              new GroupItem(oldParent.name, oldParent.id, oldParent.color, oldParent.images, newChild, oldParent.level + 1, oldParent.x, oldParent.y, oldParent.rows, Math.floor(oldParent.cols / 2)),
+              newChild);
+
+          }
+        } else {
+          //TODO: resize the entire previous group
+        }
+        break; // stop the for loop
+      }
+    }
   }
 
   getImages(): void {
@@ -170,13 +221,13 @@ export class GroupContainerComponent implements OnInit {
 
   array_move(arr, old_index, new_index) {
     if (new_index >= arr.length) {
-      var k = new_index - arr.length + 1;
+      let k = new_index - arr.length + 1;
       while (k--) {
         arr.push(undefined);
       }
     }
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
     return arr; // for testing
-  };
+  }
 
 }

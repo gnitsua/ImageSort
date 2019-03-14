@@ -1,37 +1,10 @@
-<div class="group" [ngStyle]="{'background-color':color.toString()}" [ngSwitch]="level">
-  <div *ngSwitchCase="0" class="d-flex group-name">
+<div class="group" [ngStyle]="{'background-color':color.toString()}">
+  <div [ngClass]="getGroupClass(level)">
     <div class="mr-auto p-2 "> {{ (name.length>15)? (name | slice:0:15)+'&hellip;':(name) }}</div>
-    <div [ngClass]="hasChildren === true ? 'p-2 align-self-center disabled' :'p-2 align-self-center'" [ngStyle]="{'color':'#'}">
+    <div [ngClass]="hasChildren === true ? 'p-2 align-self-center disabled' :'p-2 align-self-center'" (click)="add(id)">
       <fa name="plus" ></fa>
     </div>
-    <div [ngClass]="hasChildren === true ? 'p-2 align-self-center disabled' :'p-2 align-self-center'">
-      <fa name="times"></fa>
-    </div>
-  </div>
-  <div *ngSwitchCase="1" class="d-flex small-group-name">
-    <div class="mr-auto p-2"> {{ (name.length>15)? (name | slice:0:15)+'&hellip;':(name) }}</div>
-    <div [ngClass]="hasChildren === true ? 'p-2 align-self-center disabled' :'p-2 align-self-center'">
-      <fa name="plus" ></fa>
-    </div>
-    <div [ngClass]="hasChildren === true ? 'p-2 align-self-center disabled' :'p-2 align-self-center'">
-      <fa name="times"></fa>
-    </div>
-  </div>
-  <div *ngSwitchCase="2" class="d-flex small-group-name">
-    <div class="mr-auto p-2"> {{ (name.length>15)? (name | slice:0:15)+'&hellip;':(name) }}</div>
-    <div [ngClass]="hasChildren === true ? 'p-2 align-self-center disabled' :'p-2 align-self-center'">
-      <fa name="plus"></fa>
-    </div>
-    <div [ngClass]="hasChildren === true ? 'p-2 align-self-center disabled' :'p-2 align-self-center'">
-      <fa name="times"></fa>
-    </div>
-  </div>
-  <div *ngSwitchDefault class="d-flex x-small-group-name">
-    <div class="mr-auto p-2"> {{ (name.length>15)? (name | slice:0:15)+'&hellip;':(name) }}</div>
-    <div [ngClass]="hasChildren === true ? 'p-2 align-self-center disabled' :'p-2 align-self-center'">
-      <fa name="plus" size="sm"></fa>
-    </div>
-    <div [ngClass]="hasChildren === true ? 'p-2 align-self-center disabled' :'p-2 align-self-center'">
+    <div [ngClass]="hasChildren === true ? 'p-2 align-self-center disabled' :'p-2 align-self-center'" (click)="delete(id)">
       <fa name="times"></fa>
     </div>
   </div>
