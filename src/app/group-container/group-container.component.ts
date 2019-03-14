@@ -139,14 +139,14 @@ export class GroupContainerComponent implements OnInit {
 
   }
 
-  changedOptions() {
-    this.options.api.optionsChanged();
-  }
+  // changedOptions() {
+  //   this.options.api.optionsChanged();
+  // }
 
   removeItem(groupId: string) {
     for (let i = 0; i < this.groups.length; i++) {
       console.log(this.groups[i].id);
-      console.log(groupId)
+      console.log(groupId);
       if (this.groups[i].id === groupId) {
         console.assert(this.groups[i].child === undefined);//should never be able to delete a group with a child
         const group_to_delete = this.groups[i];// save it so we can use it's information after we delete it
@@ -154,11 +154,18 @@ export class GroupContainerComponent implements OnInit {
         if (i == 0) {//special case for deleting the top left
 
         } else if (this.groups[i - 1].level <= group_to_delete.level) {// if is parent
-          const oldParent = this.groups[i - 1];
           if (this.groups[i - 1].level % 2 !== 0) {
-            this.groups.splice(i - 1, 1, new GroupItem(oldParent.name, oldParent.id, oldParent.color, oldParent.images, undefined, oldParent.level, oldParent.x, oldParent.y, oldParent.rows, oldParent.cols * 2));
+            this.groups[i - 1].cols = this.groups[i - 1].cols * 2;
+            this.groups[i - 1].child = undefined;
+            this.groups[i - 1].level -= 1;
+            this.changedOptions();
+            // this.groups.splice(i - 1, 1, new GroupItem(oldParent.name, oldParent.id, oldParent.color, oldParent.images, undefined, oldParent.level, oldParent.x, oldParent.y, oldParent.rows, oldParent.cols * 2));
           } else {
-            this.groups.splice(i - 1, 1, new GroupItem(oldParent.name, oldParent.id, oldParent.color, oldParent.images, undefined, oldParent.level, oldParent.x, oldParent.y, oldParent.rows * 2, oldParent.cols));
+            this.groups[i - 1].rows = this.groups[i - 1].rows * 2;
+            this.groups[i - 1].child = undefined;
+            this.groups[i - 1].level -= 1;
+            this.changedOptions();
+            // this.groups.splice(i - 1, 1, new GroupItem(oldParent.name, oldParent.id, oldParent.color, oldParent.images, undefined, oldParent.level, oldParent.x, oldParent.y, oldParent.rows * 2, oldParent.cols));
           }
         } else {
           //TODO: resize the entire previous group
@@ -172,29 +179,26 @@ export class GroupContainerComponent implements OnInit {
     for (let i = 0; i < this.groups.length; i++) {
       console.log(this.groups[i].id);
       if (this.groups[i].id === groupId) {
-        console.assert(this.groups[i].child === undefined);//should never be able to delete a group with a child
-        const group_to_shrink = this.groups[i];// save it so we can use it's information after we delete it
-        if (i == 0) {//special case for deleting the top left
-
-        } else if (this.groups[i - 1].level <= group_to_shrink.level) {// if is parent
-          const oldParent = this.groups[i];
-
-          if (this.groups[i - 1].level % 2 !== 0) {
-            const newChild = new GroupItem('Group', oldParent.id + '-child', HSLColor.getLightened(oldParent.color), [], undefined, oldParent.level + 1, oldParent.x + Math.floor(oldParent.rows / 2), oldParent.y, Math.floor(oldParent.rows / 2), oldParent.cols);
-            this.groups.splice(i, 1,
-              new GroupItem(oldParent.name, oldParent.id, oldParent.color, oldParent.images, newChild, oldParent.level + 1, oldParent.x, oldParent.y, Math.floor(oldParent.rows / 2), oldParent.cols),
-              newChild);
-          } else {
-            const newChild = new GroupItem('Group', oldParent.id + '-child', HSLColor.getLightened(oldParent.color), [], undefined, oldParent.level + 1, oldParent.x, oldParent.y + Math.floor(oldParent.cols / 2), oldParent.rows, Math.floor(oldParent.cols / 2));
-            this.groups.splice(i, 1,
-              new GroupItem(oldParent.name, oldParent.id, oldParent.color, oldParent.images, newChild, oldParent.level + 1, oldParent.x, oldParent.y, oldParent.rows, Math.floor(oldParent.cols / 2)),
-              newChild);
-
-          }
+        console.assert(this.groups[i].child === undefined);//should only be able to add to a group without a child
+        if (this.groups[i].level % 2 === 0) {
+          const newChild = new GroupItem('Group', this.groups[i].id + '-child', HSLColor.getLightened(this.groups[i].color), [], undefined, this.groups[i].level+1, this.groups[i].x, this.groups[i].y + Math.floor(this.groups[i].cols / 2), this.groups[i].rows, Math.floor(this.groups[i].cols / 2))
+          this.groups[i].cols = Math.floor(this.groups[i].cols / 2);
+          this.groups[i].level += 1;
+          this.groups[i].child = newChild;
+          this.changedOptions();
+          this.groups.splice(i + 1, 0,
+            newChild);
         } else {
-          //TODO: resize the entire previous group
+          const newChild = new GroupItem('Group', this.groups[i].id + '-child', HSLColor.getLightened(this.groups[i].color), [], undefined, this.groups[i].level+1, this.groups[i].x + Math.floor(this.groups[i].rows / 2), this.groups[i].y, Math.floor(this.groups[i].rows / 2), this.groups[i].cols)
+          this.groups[i].rows = Math.floor(this.groups[i].rows / 2);
+          this.groups[i].level += 1;
+          this.groups[i].child = newChild;
+          this.changedOptions();
+          this.groups.splice(i + 1, 0,
+            newChild);
+
+          break; // stop the for loop
         }
-        break; // stop the for loop
       }
     }
   }
@@ -228,6 +232,12 @@ export class GroupContainerComponent implements OnInit {
     }
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
     return arr; // for testing
+  }
+
+  changedOptions() {
+    if (this.options.api && this.options.api.optionsChanged) {
+      this.options.api.optionsChanged();
+    }
   }
 
 }

@@ -71,7 +71,7 @@ export class GroupComponent implements OnInit, GridsterItem {
   }
 
   add(groupId: string) {
-    if (this.hasChildren === false) {//we are only allow to delete groups without children
+    if (this.hasChildren === false && this.level < 3) {//we are only allow to delete groups without children
       this.addGroup.emit(groupId);
     }
   }
