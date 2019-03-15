@@ -36,8 +36,8 @@ export class GroupComponent implements OnInit, GridsterItem {
   minItemCols: number;
   minItemRows: number;
   resizeEnabled: boolean;
-  @Output() deleteGroup = new EventEmitter<string>();
-  @Output() addGroup = new EventEmitter<string>();
+  @Output() deleteGroupItem = new EventEmitter<string>();
+  @Output() addGroupItem = new EventEmitter<string>();
 
 
 
@@ -66,20 +66,20 @@ export class GroupComponent implements OnInit, GridsterItem {
 
   delete(groupId: string) {
     if (this.hasChildren === false) {//we are only allow to delete groups without children
-      this.deleteGroup.emit(groupId);
+      this.deleteGroupItem.emit(groupId);
     }
   }
 
   add(groupId: string) {
-    if (this.hasChildren === false && this.level < 3) {//we are only allow to delete groups without children
-      this.addGroup.emit(groupId);
+    if (this.hasChildren === false && this.level < 5) {//we are only allow to delete groups without children
+      this.addGroupItem.emit(groupId);
     }
   }
 
   getGroupClass(level: number) {
-    if (level > 2) {
+    if (level > 5) {
       return 'd-flex x-small-group-name';
-    } else if (level > 1) {
+    } else if (level > 2) {
       return 'd-flex small-group-name';
     } else {
       return 'd-flex group-name';

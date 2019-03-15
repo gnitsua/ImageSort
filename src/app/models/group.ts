@@ -6,13 +6,13 @@ export class Group {
   id: string;
   color: HSLColor;
   images: ImageItem[];
-  child: Group;
+  childId: string;
 
-  constructor(name: string, id:string, color: HSLColor, images: ImageItem[], child: Group) {
+  constructor(name: string, id:string, color: HSLColor, images: ImageItem[], childId: string) {
     this.name = name;
     this.id = id;
     this.color = color;
     this.images = images;
-    this.child = child;
+    this.childId = childId;
   }
 }

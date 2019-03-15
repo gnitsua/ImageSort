@@ -26,6 +26,7 @@ import { GridsterModule } from 'angular-gridster2';
 import { ImageComponent } from './image/image.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import {GroupComponent} from './group/group.component';
+import { TopBarComponent } from './top-bar/top-bar.component';
 
 
 
@@ -63,7 +64,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ImageSortComponent,
     ImageSliderComponent,
     ImageComponent,
-    GroupComponent
+    GroupComponent,
+    TopBarComponent
   ],
   bootstrap: [AppComponent],
   providers: [

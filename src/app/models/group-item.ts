@@ -10,8 +10,8 @@ export class GroupItem extends Group implements GridsterItem {
   rows: number;
   cols: number;
 
-  constructor(name: string, id: string, color: HSLColor, images: ImageItem[], child: Group, level: number, x: number, y: number, rows: number, cols: number) {
-    super(name, id, color, images, child);
+  constructor(name: string, id: string, color: HSLColor, images: ImageItem[], childId: string, level: number, x: number, y: number, rows: number, cols: number) {
+    super(name, id, color, images, childId);
     this.level = level;
     this.x = x;
     this.y = y;

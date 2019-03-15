@@ -61,7 +61,7 @@ describe('Tutorial part 6', () => {
       appHeroesHref: navElts.get(1),
       appHeroes: element(by.css('app-root app-heroes')),
       allHeroes: element.all(by.css('app-root app-heroes li')),
-      selectedHeroSubview: element(by.css('app-root app-heroes > div:last-child')),
+      selectedHeroSubview: element(by.css('app-root app-heroes > div:last-childId')),
 
       heroDetail: element(by.css('app-root app-hero-detail > div')),
 
