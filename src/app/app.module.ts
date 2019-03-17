@@ -27,6 +27,7 @@ import { ImageComponent } from './image/image.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import {GroupComponent} from './group/group.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
+import { GroupModalComponent } from './group-modal/group-modal.component';
 
 
 
@@ -65,7 +66,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ImageSliderComponent,
     ImageComponent,
     GroupComponent,
-    TopBarComponent
+    TopBarComponent,
+    GroupModalComponent
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -73,7 +75,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
     }
-  ]
+  ],
+  entryComponents: [GroupModalComponent]
 })
 export class AppModule {
 }

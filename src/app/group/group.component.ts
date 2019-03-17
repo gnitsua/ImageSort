@@ -2,6 +2,8 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ImageItem} from '../models/image-item';
 import {GridsterItem, GridsterItemComponentInterface} from 'angular-gridster2';
 import {HSLColor} from '../models/HSLColor';
+import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {GroupModalComponent} from '../group-modal/group-modal.component';
 
 @Component({
   selector: 'app-group',
@@ -11,7 +13,7 @@ import {HSLColor} from '../models/HSLColor';
 export class GroupComponent implements OnInit, GridsterItem {
 
 
-  constructor() {
+  constructor(private modalService: NgbModal) {
 
 
   }
@@ -36,6 +38,7 @@ export class GroupComponent implements OnInit, GridsterItem {
   minItemCols: number;
   minItemRows: number;
   resizeEnabled: boolean;
+  closeResult: string;
   @Output() deleteGroupItem = new EventEmitter<string>();
   @Output() addGroupItem = new EventEmitter<string>();
 
@@ -83,6 +86,31 @@ export class GroupComponent implements OnInit, GridsterItem {
       return 'd-flex small-group-name';
     } else {
       return 'd-flex group-name';
+    }
+  }
+
+  wasPressed($event, group){
+    console.log($event)
+    console.log(group)
+    const modalRef = this.modalService.open(GroupModalComponent,{windowClass:'group-modal'});
+    modalRef.componentInstance.group = group;
+    // modalRef.componentInstance.name = 'World';
+    modalRef.result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+
+
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
     }
   }
 

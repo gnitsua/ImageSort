@@ -1,0 +1,17 @@
+<div class="group-modal" [ngStyle]="{'background-color':group.color}">
+  <div class="modal-header">
+    <input mdbInput type="text" name="text" [(ngModel)]="group.name" id="form1" class="form-control">
+    <!--<h4 class="modal-title">{{group.name}}</h4>-->
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Group images</p>
+  </div>
+  <!--<div class="modal-footer">-->
+    <!--<button mat-flat-button color="warn">Warn</button>-->
+    <!--<button mat-flat-button color="warn">Warn</button>-->
+    <!--&lt;!&ndash;<button mat-flat-button color="warn" (click)="activeModal.close('Close click')">Warn</button>&ndash;&gt;-->
+  <!--</div>-->
+</div>

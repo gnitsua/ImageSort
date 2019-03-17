@@ -1,0 +1,8 @@
+.group-modal {
+  border: none;
+  color: #FFFFFF;
+}
+
+.group-modal > .modal-header {
+  border-bottom: none;
+}
