@@ -80,7 +80,7 @@ export class GroupContainerComponent implements OnInit {
       gridType: 'fit',
       mobileBreakpoint: 0,
       compactType: 'none',
-      displayGrid: 'always',
+      displayGrid: 'none',
     };
 
     const groupsJson = [
