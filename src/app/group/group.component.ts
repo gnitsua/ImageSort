@@ -69,7 +69,7 @@ export class GroupComponent implements OnInit, GridsterItem {
     this.minItemArea = 10;
     this.minItemCols = 10;
     this.minItemRows = 10;
-    this.getImages();
+    // this.getImages();
   }
 
   delete(groupId: string) {
@@ -105,6 +105,7 @@ export class GroupComponent implements OnInit, GridsterItem {
   }
 
   getNumImagesToShow(level: number) {
+    return 100
     if (level > 4) {
       return 1;
     } else if (level > 2) {

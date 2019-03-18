@@ -30,3 +30,7 @@
 .mat-card-header-text {
   margin: 0px;/* this is hacky */
 }
+
+.cdk-drop-list-receiving {
+  opacity: 0.5;
+}

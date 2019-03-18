@@ -1,4 +1,6 @@
-<mat-card class="group" [ngStyle]="{'background-color':color.toString()}" >
+<mat-card class="group" [ngStyle]="{'background-color':color.toString()}"
+          cdkDropList (cdkDropListDropped)="drop($event)"
+>
   <mat-card-header [ngClass]="getGroupClass(level)" (press)="wasPressed($event,this)">
     <mat-card-title></mat-card-title>
     <div class="mr-auto p-2 "> {{ (name.length>15)? (name | slice:0:15)+'&hellip;':(name) }}</div>
@@ -16,11 +18,7 @@
         *ngFor="let image of images; let i = index"
         [colspan]="1"
         [rowspan]="1"
-        cdkDropList
-        [cdkDropListData]="[image]" (cdkDropListDropped)="drop($event)"
-        cdkDrag
-        [cdkDragData]="image"
-        cdkDragDisabled
+
       >
 
             <app-image *ngIf="i < getNumImagesToShow(level)" [image]="image" [square]="true" [draggable]="false"></app-image>

@@ -30,3 +30,9 @@
 .drag-container {
   position: relative;
 }
+/* Animate an item that has been dropped. */
+.cdk-drag-animating {
+  transition: opacity 3s linear;
+}
+
+
