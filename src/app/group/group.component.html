@@ -1,5 +1,6 @@
-<div class="group" [ngStyle]="{'background-color':color.toString()}" (press)="wasPressed($event,this)">
-  <div [ngClass]="getGroupClass(level)">
+<mat-card class="group" [ngStyle]="{'background-color':color.toString()}" >
+  <mat-card-header [ngClass]="getGroupClass(level)" (press)="wasPressed($event,this)">
+    <mat-card-title></mat-card-title>
     <div class="mr-auto p-2 "> {{ (name.length>15)? (name | slice:0:15)+'&hellip;':(name) }}</div>
     <div [ngClass]="hasChildren === true ||  level > 4 ? 'p-2 align-self-center disabled' :'p-2 align-self-center'" (click)="add(id)">
       <fa name="plus" ></fa>
@@ -7,5 +8,26 @@
     <div [ngClass]="hasChildren === true ? 'p-2 align-self-center disabled' :'p-2 align-self-center'" (click)="delete(id)">
       <fa name="times"></fa>
     </div>
-  </div>
-</div>
+
+  </mat-card-header>
+  <mat-card-content style="height: 100%;" >
+    <mat-grid-list cols="{{getImageCols(level)}}" rowHeight="100px">
+      <mat-grid-tile
+        *ngFor="let image of images; let i = index"
+        [colspan]="1"
+        [rowspan]="1"
+        cdkDropList
+        [cdkDropListData]="[image]" (cdkDropListDropped)="drop($event)"
+        cdkDrag
+        [cdkDragData]="image"
+        cdkDragDisabled
+      >
+
+            <app-image *ngIf="i < getNumImagesToShow(level)" [image]="image" [square]="true" [draggable]="false"></app-image>
+
+
+
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-card-content>
+</mat-card>

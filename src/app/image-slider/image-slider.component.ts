@@ -26,6 +26,7 @@ export class ImageSliderComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<ImageItem[]>) {
+    console.log(event);
     if (event.previousContainer !== event.container) {
       // console.log(event.previousContainer.data)
       this.transferArrayItem(event.previousContainer.data, event.container.data,

@@ -1,9 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ImageItem} from '../models/image-item';
-import {GridsterItem, GridsterItemComponentInterface} from 'angular-gridster2';
+import {GridsterConfig, GridsterItem, GridsterItemComponentInterface} from 'angular-gridster2';
 import {HSLColor} from '../models/HSLColor';
 import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {GroupModalComponent} from '../group-modal/group-modal.component';
+import {ImagesService} from '../services/images.service';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-group',
@@ -13,7 +15,7 @@ import {GroupModalComponent} from '../group-modal/group-modal.component';
 export class GroupComponent implements OnInit, GridsterItem {
 
 
-  constructor(private modalService: NgbModal) {
+  constructor(private modalService: NgbModal, private imageService: ImagesService) {
 
 
   }
@@ -37,14 +39,27 @@ export class GroupComponent implements OnInit, GridsterItem {
   minItemArea: number;
   minItemCols: number;
   minItemRows: number;
-  resizeEnabled: boolean;
   closeResult: string;
+  options: GridsterConfig;
   @Output() deleteGroupItem = new EventEmitter<string>();
   @Output() addGroupItem = new EventEmitter<string>();
 
 
-
   ngOnInit() {
+    // this.options = {
+    //   margin: 10,
+    //   minCols: 2,
+    //   maxCols: 4,
+    //   minRows: 1,
+    //   maxRows: 2,
+    //   fixedRowHeight:100,
+    //   fixedColWidth:100,
+    //   gridType: 'fit',
+    //   mobileBreakpoint: 0,
+    //   compactType: 'compactLeft&Up',
+    //   displayGrid: 'none',
+    // };
+
     this.compactEnabled = true;
     this.dragEnabled = false;
     // initCallback: (item: GridsterItem, itemComponent: GridsterItemComponentInterface) => void;
@@ -54,17 +69,7 @@ export class GroupComponent implements OnInit, GridsterItem {
     this.minItemArea = 10;
     this.minItemCols = 10;
     this.minItemRows = 10;
-    this.resizeEnabled = true;
-    // this.resizable.handles = {
-    //   s: false,
-    //   e: false,
-    //   n: false,
-    //   w: false,
-    //   se: false,
-    //   ne: false,
-    //   sw: false,
-    //   nw: false
-    // }
+    this.getImages();
   }
 
   delete(groupId: string) {
@@ -89,10 +94,30 @@ export class GroupComponent implements OnInit, GridsterItem {
     }
   }
 
-  wasPressed($event, group){
-    console.log($event)
-    console.log(group)
-    const modalRef = this.modalService.open(GroupModalComponent,{windowClass:'group-modal'});
+  getImageCols(level: number) {
+    if (level > 4) {
+      return 1;
+    } else if (level > 0) {
+      return 2;
+    } else {
+      return 4;
+    }
+  }
+
+  getNumImagesToShow(level: number) {
+    if (level > 4) {
+      return 1;
+    } else if (level > 2) {
+      return 2;
+    } else if (level > 0) {
+      return 4;
+    } else {
+      return 8;
+    }
+  }
+
+  wasPressed($event, group) {
+    const modalRef = this.modalService.open(GroupModalComponent, {windowClass: 'group-modal'});
     modalRef.componentInstance.group = group;
     // modalRef.componentInstance.name = 'World';
     modalRef.result.then((result) => {
@@ -110,9 +135,44 @@ export class GroupComponent implements OnInit, GridsterItem {
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
       return 'by clicking on a backdrop';
     } else {
-      return  `with: ${reason}`;
+      return `with: ${reason}`;
     }
   }
+
+  getImages(): void {
+    this.imageService.getImages()
+      .subscribe(images => this.images = images.map(image => new ImageItem(image)));
+  }
+
+
+  drop(event: CdkDragDrop<ImageItem[]>) {
+    console.log(event)
+    if (event.previousContainer !== event.container) {
+      console.log(event.previousContainer.data)
+      this.transferArrayItem(event.previousContainer.data, event.container.data,
+        event.previousIndex, event.currentIndex);
+    } else {
+      this.array_move(this.images, event.previousIndex, event.currentIndex);
+    }
+  }
+
+  transferArrayItem(srcContainer: Array<ImageItem>, dstContainer: Array<ImageItem>, srcIndex: number, dstIndex: number) {
+    const item = srcContainer.splice(srcIndex, 1)[0];
+    // dstContainer.splice(dstIndex, 0, item);
+    this.images.unshift(item);//the dst container is not real
+  }
+
+
+  array_move(arr, old_index, new_index) {
+    if (new_index >= arr.length) {
+      var k = new_index - arr.length + 1;
+      while (k--) {
+        arr.push(undefined);
+      }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing
+  };
 
 
 }

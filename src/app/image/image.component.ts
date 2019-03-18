@@ -9,19 +9,13 @@ import {ImageItem} from '../models/image-item';
 export class ImageComponent implements OnInit {
 
   @Input() image: ImageItem;
+  @Input() square: boolean;
+  @Input() draggable: boolean;
 
   constructor() {
   }
 
   ngOnInit() {
-  }
-
-  onPress(event:ImageItem){
-    event.dragEnabled = true
-  }
-
-  onRelease(event:ImageItem){
-    event.dragEnabled = false
   }
 
 }

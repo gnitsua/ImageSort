@@ -6,15 +6,11 @@
          [cdkDragData]="image"
          cdkDragRootElement=".image-container"
          *ngFor="let image of images;">
-      <div class="image-container">
-        <!--<span class="glyphicon glyphicon-trash glyph"></span>-->
 
-        <img src="{{image.image.url}}" alt="{{image.image.id}}" class="img-thumbnail">
-        <div cdkDragHandle class="drag-icon">
-          <fa name="bars"></fa>
-        </div>
+      <!--<span class="glyphicon glyphicon-trash glyph"></span>-->
 
-      </div>
+      <app-image [image]="image" [square]="false" [draggable]="true"></app-image>
+
     </div>
   </perfect-scrollbar>
 </div>

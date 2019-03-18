@@ -7,7 +7,27 @@
     </button>
   </div>
   <div class="modal-body">
-    <p>Group images</p>
+    <mat-grid-list cols="4" rowHeight="100px">
+      <mat-grid-tile
+        *ngFor="let image of group.images; let i = index"
+        [colspan]="1"
+        [rowspan]="1"
+
+      >
+        <div class="deletable-image-container" (click)="deleteItem(i)">
+        <app-image [image]="image" [square]="true" [draggable]="false"></app-image>
+          <fa class="icon" name="trash"></fa>
+        </div>
+        <!--<div class="view overlay">-->
+          <!--<img src="https://mdbootstrap.com/img/Photos/Others/forest-sm.jpg" class="img-fluid " alt="smaple image">-->
+          <!--<div class="mask flex-center rgba-red-strong">-->
+            <!--<p class="white-text">Strong overlay</p>-->
+          <!--</div>-->
+        <!--</div>-->
+
+
+      </mat-grid-tile>
+    </mat-grid-list>
   </div>
   <!--<div class="modal-footer">-->
     <!--<button mat-flat-button color="warn">Warn</button>-->

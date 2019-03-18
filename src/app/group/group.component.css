@@ -1,5 +1,5 @@
 .group {
-  border-radius: 0.25rem;
+  /*border-radius: 0.25rem;*/
   padding: 5px;
   color: #FFFFFF;
   width: 100%;
@@ -25,4 +25,8 @@
 
 .disabled {
   opacity: 0.5;
+}
+
+.mat-card-header-text {
+  margin: 0px;/* this is hacky */
 }

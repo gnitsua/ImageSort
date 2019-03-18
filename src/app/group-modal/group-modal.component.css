@@ -6,3 +6,24 @@
 .group-modal > .modal-header {
   border-bottom: none;
 }
+
+
+.deletable-image-container {
+  position: relative;
+}
+
+.deletable-image-container:hover {
+  opacity: 0.5;
+}
+
+.icon {
+  position: absolute;
+  top: 40px;
+  left: 50px;
+  opacity: 0;
+}
+
+.deletable-image-container:hover .icon{
+  opacity: 1;
+}
+

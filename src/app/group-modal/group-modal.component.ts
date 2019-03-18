@@ -17,4 +17,8 @@ export class GroupModalComponent implements OnInit {
   ngOnInit() {
   }
 
+  deleteItem(index:number){
+    this.group.images.splice(index,1)
+  }
+
 }

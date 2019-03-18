@@ -22,13 +22,15 @@ import {GroupContainerComponent} from './group-container/group-container.compone
 
 import {PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import { GridsterModule } from 'angular-gridster2';
-import { ImageComponent } from './image/image.component';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import {GridsterModule} from 'angular-gridster2';
+import {ImageComponent} from './image/image.component';
+import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {GroupComponent} from './group/group.component';
-import { TopBarComponent } from './top-bar/top-bar.component';
-import { GroupModalComponent } from './group-modal/group-modal.component';
+import {TopBarComponent} from './top-bar/top-bar.component';
+import {GroupModalComponent} from './group-modal/group-modal.component';
 
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {MatButtonModule, MatCardModule, MatGridListModule} from '@angular/material';
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -47,6 +49,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DragDropModule,
     GridsterModule,
     AngularFontAwesomeModule,
+    ScrollingModule,
+    MatGridListModule,
+    MatCardModule,
+    MatButtonModule,
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.
