@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {Image} from '../models/Image';
 
@@ -12,17 +12,36 @@ const httpOptions = {
 @Injectable({providedIn: 'root'})
 export class ImagesService {
   private goatsUrl = 'api/goats';
+  images: Image[] = [];
+  observableImages: BehaviorSubject<Image[]>;
 
   constructor(private http: HttpClient) {
+    this.observableImages = new BehaviorSubject<Image[]>(this.images);
+    this.init()
+
   }
 
-  /** GET images from the server */
-  getImages(): Observable<Image[]> {
-    return this.http.get<Image[]>(this.goatsUrl)
+  init(): void {
+    /** GET images from the server */
+    this.http.get<Image[]>(this.goatsUrl)
       .pipe(
         tap(_ => console.log('fetched heroes')),
         catchError(this.handleError('getHeroes', []))
-      );
+      ).subscribe(res => {this.images = res;this.eventChange()});
+  }
+
+  eventChange() {
+    this.observableImages.next(this.images);
+  }
+
+
+  getImages(): Image[] {
+    return this.images;
+  }
+
+  addImage(image: Image) {
+    this.images.push(image);
+    this.eventChange();
   }
 
   /**
@@ -41,4 +60,6 @@ export class ImagesService {
       return of(result as T);
     };
   }
+
+
 }

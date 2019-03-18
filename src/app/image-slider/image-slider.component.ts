@@ -21,7 +21,7 @@ export class ImageSliderComponent implements OnInit {
   }
 
   getImages(): void {
-    this.imageService.getImages()
+    this.imageService.observableImages
       .subscribe(images => this.images = images.map(image => new ImageItem(image)));
   }
 

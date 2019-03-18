@@ -74,6 +74,7 @@ export class GroupComponent implements OnInit, GridsterItem {
 
   delete(groupId: string) {
     if (this.hasChildren === false) {//we are only allow to delete groups without children
+      this.images.map(imageItem => this.imageService.addImage(imageItem.image));// put all the images back into the image service
       this.deleteGroupItem.emit(groupId);
     }
   }
@@ -140,10 +141,10 @@ export class GroupComponent implements OnInit, GridsterItem {
     }
   }
 
-  getImages(): void {
-    this.imageService.getImages()
-      .subscribe(images => this.images = images.map(image => new ImageItem(image)));
-  }
+  // getImages(): void {
+  //   this.imageService.getImages()
+  //     .subscribe(images => this.images = images.map(image => new ImageItem(image)));
+  // }
 
 
   drop(event: CdkDragDrop<ImageItem[]>) {
