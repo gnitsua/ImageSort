@@ -5,9 +5,10 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {HeroesComponent} from './heroes/heroes.component';
 import {HeroDetailComponent} from './hero-detail/hero-detail.component';
 import {ImageSortComponent} from './image-sort/image-sort.component';
+import {IntroScreenComponent} from './intro-screen/intro-screen.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: '/sort', pathMatch: 'full'},
+  {path: '', component: IntroScreenComponent},
   // {path: 'groups', component: DashboardComponent},
   // {path: 'detail/:id', component: HeroDetailComponent},
   // {path: 'heroes', component: HeroesComponent},

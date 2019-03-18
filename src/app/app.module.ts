@@ -31,6 +31,7 @@ import {GroupModalComponent} from './group-modal/group-modal.component';
 
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatButtonModule, MatCardModule, MatGridListModule} from '@angular/material';
+import { IntroScreenComponent } from './intro-screen/intro-screen.component';
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -73,7 +74,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ImageComponent,
     GroupComponent,
     TopBarComponent,
-    GroupModalComponent
+    GroupModalComponent,
+    IntroScreenComponent
   ],
   bootstrap: [AppComponent],
   providers: [

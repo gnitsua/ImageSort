@@ -14,16 +14,11 @@
         [rowspan]="1"
 
       >
-        <div class="deletable-image-container" (click)="deleteItem(i)">
+        <div class="deletable-image-container" (press)="deleteItem(i)">
         <app-image [image]="image" [square]="true" [draggable]="false"></app-image>
           <fa class="icon" name="trash"></fa>
         </div>
-        <!--<div class="view overlay">-->
-          <!--<img src="https://mdbootstrap.com/img/Photos/Others/forest-sm.jpg" class="img-fluid " alt="smaple image">-->
-          <!--<div class="mask flex-center rgba-red-strong">-->
-            <!--<p class="white-text">Strong overlay</p>-->
-          <!--</div>-->
-        <!--</div>-->
+
 
 
       </mat-grid-tile>

@@ -9,7 +9,13 @@
 
       <!--<span class="glyphicon glyphicon-trash glyph"></span>-->
 
+      <div class="drag-container">
       <app-image [image]="image" [square]="false" [draggable]="true"></app-image>
+      <div cdkDragHandle class="drag-icon"> <!--TODO: this logic should be in images-->
+        <fa name="bars"></fa>
+      </div>
+
+      </div>
 
     </div>
   </perfect-scrollbar>
