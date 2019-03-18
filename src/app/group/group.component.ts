@@ -148,9 +148,7 @@ export class GroupComponent implements OnInit, GridsterItem {
 
 
   drop(event: CdkDragDrop<ImageItem[]>) {
-    console.log(event)
     if (event.previousContainer !== event.container) {
-      console.log(event.previousContainer.data)
       this.transferArrayItem(event.previousContainer.data, event.container.data,
         event.previousIndex, event.currentIndex);
     } else {
@@ -159,6 +157,7 @@ export class GroupComponent implements OnInit, GridsterItem {
   }
 
   transferArrayItem(srcContainer: Array<ImageItem>, dstContainer: Array<ImageItem>, srcIndex: number, dstIndex: number) {
+    this.imageService.moveImages(srcIndex);
     const item = srcContainer.splice(srcIndex, 1)[0];
     // dstContainer.splice(dstIndex, 0, item);
     this.images.unshift(item);//the dst container is not real

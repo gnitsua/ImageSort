@@ -44,6 +44,10 @@ export class ImagesService {
     this.eventChange();
   }
 
+  moveImages(index:number) {
+    this.images.splice(index,1);//for now just delete it
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
