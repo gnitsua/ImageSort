@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ImageItem} from '../models/image-item';
+import {Image} from '../models/Image';
 
 @Component({
   selector: 'app-image',
@@ -8,7 +8,7 @@ import {ImageItem} from '../models/image-item';
 })
 export class ImageComponent implements OnInit {
 
-  @Input() image: ImageItem;
+  @Input() image: Image;
   @Input() square: boolean;
   @Input() draggable: boolean;
 

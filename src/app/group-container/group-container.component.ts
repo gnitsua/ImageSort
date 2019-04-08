@@ -1,17 +1,19 @@
 import {Component, OnInit} from '@angular/core';
 import {ImagesService} from '../services/images.service';
 import {GridsterConfig} from 'angular-gridster2';
-import {ImageItem} from '../models/image-item';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Group} from '../models/group';
 import {HSLColor} from '../models/HSLColor';
 import {GroupItem} from '../models/group-item';
 import * as uuid from 'node_modules/uuid';
+import {Image} from '../models/Image';
+import {FileInfo} from '../models/fileInfo';
 
 @Component({
   selector: 'app-group-container',
   templateUrl: './group-container.component.html',
-  styleUrls: ['./group-container.component.css']
+  styleUrls: ['./group-container.component.css'],
+  providers: [ImagesService]
 })
 export class GroupContainerComponent implements OnInit {
 
@@ -36,7 +38,7 @@ export class GroupContainerComponent implements OnInit {
   ];
 
   options: GridsterConfig;
-  groups: Array<GroupItem>;
+  groups: Array<GroupItem> = [];
 
   rows = 8;
   cols = 4;
@@ -83,53 +85,21 @@ export class GroupContainerComponent implements OnInit {
       displayGrid: 'none',
     };
 
-    const groupsJson = [
-      {
-        name: 'Regular Goats', id: '1', images: [], child:
-          {
-            name: 'Big Goats', id: '2', images: [], child:
-              {
-                name: 'Scary Goats',
-                id: '3',
-                images: [],
-                child:
-                  {
-                    name: 'Scary and Hairy Goats',
-                    id: '4',
-                    images: [],
-                    child: undefined
-                  },
-              }
-          }
-      },
-      {
-        name: 'Sheep',
-        id: '5',
-        color: this.hslColors[1],
-        images: [],
-        child: {
-          name: 'Big Sheep', id: '6', color: HSLColor.getLightened(this.hslColors[1]), images: [], child: undefined
-        }
-      }
-    ];
+    this.imageService.getFolders('1mN3v6Fj497E3ghOueZF26msuxFdGN5Ur').then((folders) => {
+      folders.forEach((folder) => this.addGroup(new GroupItem(
+        folder.Name,
+        folder.Id,
+        this.hslColors.pop(),//automatically color the groups in order
+        [],
+        undefined,
+        0,
+        0,
+        0,
+        2,
+        this.cols
+      )));
 
-    this.groups = [];
-    const numGroups = groupsJson.length;
-    // groupsJson.forEach((groupJson, groupNumber) =>
-    //   this.groups = this.groups.concat(this.groupsToGroupItemList(groupJson, 0, 0, 2, this.cols, 0)));
-
-    groupsJson.forEach((groupJson, groupNumber) => this.addGroup(new GroupItem(
-      groupJson.name,
-      groupJson.id,
-      this.hslColors.pop(),//automatically color the groups in order
-      groupJson.images,
-      undefined,
-      0,
-      0,
-      0,
-      2,
-      this.cols
-    )));
+    });
   }
 
 
@@ -157,10 +127,11 @@ export class GroupContainerComponent implements OnInit {
 
     let newChildItem;
     if (newChild !== undefined) {
-      newChildItem = new GroupItem('Group', group.id + '-childId', HSLColor.getLightened(group.color), [], undefined, group.level + 2, group.x, group.y + GroupContainerComponent.getItemCols(group.level + 1), GroupContainerComponent.getItemRows(group.level + 2), GroupContainerComponent.getItemRows(group.level + 2));
+      newChildItem = new GroupItem(newChild.name, newChild.id, HSLColor.getLightened(group.color), [], undefined, group.level + 2, group.x + GroupContainerComponent.getItemCols(group.level + 2), group.y, GroupContainerComponent.getItemRows(group.level + 2), GroupContainerComponent.getItemRows(group.level + 2));
     } else {
-      newChildItem = this.createEmptyChild(HSLColor.getLightened(group.color), group.level + 2, group.x + GroupContainerComponent.getItemCols(group.level + 1), group.y );
+      newChildItem = this.createEmptyChild(HSLColor.getLightened(group.color), group.level + 2, group.x + GroupContainerComponent.getItemCols(group.level + 1), group.y);
     }
+    console.log(newChildItem);
     this.groups.splice(groupIndex + 1, 0, newChildItem);
     this.groups[groupIndex].level = group.level + 1;
     this.groups[groupIndex].cols = GroupContainerComponent.getItemCols(group.level);
@@ -172,15 +143,15 @@ export class GroupContainerComponent implements OnInit {
 
 
   splitHorizontalAndAdd(groupId: string, newChild: Group) {
-
     const groupIndex = this.getGridIndex(groupId);
     const group = this.groups[groupIndex];
     let newChildItem;
     if (newChild !== undefined) {
-      newChildItem = new GroupItem('Group', group.id + '-childId', HSLColor.getLightened(group.color), [], undefined, group.level + 2, group.x + GroupContainerComponent.getItemRows(group.level + 1), group.y, GroupContainerComponent.getItemRows(group.level + 2), GroupContainerComponent.getItemCols(group.level + 2));
+      newChildItem = new GroupItem(newChild.name, newChild.id, HSLColor.getLightened(group.color), [], undefined, group.level + 2, group.x , group.y + GroupContainerComponent.getItemRows(group.level + 2), GroupContainerComponent.getItemRows(group.level + 2), GroupContainerComponent.getItemCols(group.level + 2));
     } else {
       newChildItem = this.createEmptyChild(HSLColor.getLightened(group.color), group.level + 2, group.x, group.y + GroupContainerComponent.getItemRows(group.level + 1));
     }
+    console.log(newChildItem);
     this.groups.splice(groupIndex + 1, 0, newChildItem);
     this.groups[groupIndex].level = group.level + 1;
     this.groups[groupIndex].rows = GroupContainerComponent.getItemRows(group.level);// mutate the original object
@@ -191,13 +162,13 @@ export class GroupContainerComponent implements OnInit {
   }
 
 
-  addItem(groupId: string) {
-    const groupIndex = this.getGridIndex(groupId); //TODO: this does the search twice
+  addItem(groupAndChild: { group: string, childFolder: FileInfo }) {
+    const groupIndex = this.getGridIndex(groupAndChild.group); //TODO: this does the search twice
     console.assert(this.groups[groupIndex].childId === undefined);//should only be able to add to a group without a childId
     if (this.groups[groupIndex].level % 4 !== 0) {
-      this.splitHorizontalAndAdd(groupId, undefined);
+      this.splitHorizontalAndAdd(groupAndChild.group, new Group(groupAndChild.childFolder.Name, groupAndChild.childFolder.Id, undefined, [], undefined)); //TODO: we don't actually know enough to make a group, this should be some other data structure
     } else {
-      this.splitVerticalAndAdd(groupId, undefined);
+      this.splitVerticalAndAdd(groupAndChild.group, new Group(groupAndChild.childFolder.Name, groupAndChild.childFolder.Id, undefined, [], undefined));
     }
   }
 
@@ -205,14 +176,14 @@ export class GroupContainerComponent implements OnInit {
     const groupIndex = this.getGridIndex(groupId);
     const group = this.groups[groupIndex];
     this.groups.splice(groupIndex, 1);
-    if (groupIndex > 0 && this.groups[groupIndex - 1].level < group.level) {//if this group has a parent we need to update it
+    if (groupIndex > 0 && this.groups[groupIndex - 1].level < group.level) {//if this group has a parentIds we need to update it
       this.groups[groupIndex - 1].level = this.groups[groupIndex - 1].level - 1;
       this.groups[groupIndex - 1].childId = undefined;
       this.groups[groupIndex - 1].cols = GroupContainerComponent.getItemCols(this.groups[groupIndex - 1].level);
     } else {//otherwise we are removing an entire group
       console.assert(group.level === 0);
       this.hslColors.push(group.color);//add the color back to the mix
-      for(let i = groupIndex; i < this.groups.length; i++){
+      for (let i = groupIndex; i < this.groups.length; i++) {
         this.groups[i].y -= 2;
       }
     }
@@ -225,14 +196,14 @@ export class GroupContainerComponent implements OnInit {
     const groupIndex = this.getGridIndex(groupId);
     const group = this.groups[groupIndex];
     this.groups.splice(groupIndex, 1);
-    if (groupIndex > 0 && this.groups[groupIndex - 1].level < group.level) {//if this group has a parent we need to update it
+    if (groupIndex > 0 && this.groups[groupIndex - 1].level < group.level) {//if this group has a parentIds we need to update it
       this.groups[groupIndex - 1].level = this.groups[groupIndex - 1].level - 1;
       this.groups[groupIndex - 1].childId = undefined;
       this.groups[groupIndex - 1].rows = GroupContainerComponent.getItemRows(this.groups[groupIndex - 1].level);
     } else {//otherwise we are removing an entire group
       console.assert(group.level === 0);
       this.hslColors.push(group.color);//add the color back to the mix
-      for(let i = groupIndex; i < this.groups.length; i++){
+      for (let i = groupIndex; i < this.groups.length; i++) {
         this.groups[i].y -= 2;
       }
     }
@@ -262,7 +233,7 @@ export class GroupContainerComponent implements OnInit {
     // .subscribe(images => this.images = images.map(image => new ImageItem(image)));
   }
 
-  drop(event: CdkDragDrop<ImageItem[]>) {
+  drop(event: CdkDragDrop<Image[]>) {
     // if (event.previousContainer !== event.container) {
     //   // console.log(event.previousContainer.data)
     //   this.transferArrayItem(event.previousContainer.data, event.container.data,
@@ -272,7 +243,7 @@ export class GroupContainerComponent implements OnInit {
     // }
   }
 
-  transferArrayItem(srcContainer: Array<ImageItem>, dstContainer: Array<ImageItem>, srcIndex: number, dstIndex: number) {
+  transferArrayItem(srcContainer: Array<Image>, dstContainer: Array<Image>, srcIndex: number, dstIndex: number) {
     const item = srcContainer.splice(srcIndex, 1)[0];
     dstContainer.splice(dstIndex, 0, item);
   }

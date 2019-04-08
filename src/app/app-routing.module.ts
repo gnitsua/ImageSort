@@ -6,13 +6,13 @@ import {HeroesComponent} from './heroes/heroes.component';
 import {HeroDetailComponent} from './hero-detail/hero-detail.component';
 import {ImageSortComponent} from './image-sort/image-sort.component';
 import {IntroScreenComponent} from './intro-screen/intro-screen.component';
+import {SignInComponent} from './signin/signin.component';
+import {LoggedInGuard} from '../infrastructure/sessions/loggedInGuard';
 
 const routes: Routes = [
   {path: '', component: IntroScreenComponent},
-  // {path: 'groups', component: DashboardComponent},
-  // {path: 'detail/:id', component: HeroDetailComponent},
-  // {path: 'heroes', component: HeroesComponent},
-  {path: 'sort', component: ImageSortComponent}
+  { path: 'signin', component: SignInComponent },
+  { path: 'sort', component: ImageSortComponent,canActivate: [LoggedInGuard] }
 ];
 
 @NgModule({

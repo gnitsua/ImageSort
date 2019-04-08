@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
@@ -31,13 +31,38 @@ import {GroupModalComponent} from './group-modal/group-modal.component';
 
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatButtonModule, MatCardModule, MatGridListModule} from '@angular/material';
-import { IntroScreenComponent } from './intro-screen/intro-screen.component';
+import {IntroScreenComponent} from './intro-screen/intro-screen.component';
+import {GoogleApiModule, NG_GAPI_CONFIG, NgGapiClientConfig} from 'ng-gapi';
+import { FolderSelectComponent } from './folder-select/folder-select.component';
+import { GapiSession } from '../infrastructure/sessions/gapi.session';
+import {AppSession} from '../infrastructure/sessions/app.session';
+import {FileSession} from '../infrastructure/sessions/file.session';
+import {UserSession} from '../infrastructure/sessions/user.session';
+import {AppRepository} from '../infrastructure/repositories/app.repository';
+import {BreadCrumbSession} from '../infrastructure/sessions/breadcrumb.session';
+import {FileRepository} from '../infrastructure/repositories/file.repository';
+import {UserRepository} from '../infrastructure/repositories/user.repository';
+import {AppContext} from '../infrastructure/app.context';
+import {LoggedInGuard} from '../infrastructure/sessions/loggedInGuard';
+import { SignInComponent } from './signin/signin.component';
+
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
 
+let gapiClientConfig: NgGapiClientConfig = {
+  client_id: '981904059013-est0r4fo4t62311kqffdek072rkaokge.apps.googleusercontent.com',
+  discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v2/rest'],
+  scope: [
+    'https://www.googleapis.com/auth/drive',
+  ].join(' ')
+};
+
+export function initGapi(gapiSession: GapiSession) {
+  return () => gapiSession.initClient();
+}
 
 @NgModule({
   imports: [
@@ -54,6 +79,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatGridListModule,
     MatCardModule,
     MatButtonModule,
+    GoogleApiModule.forRoot({
+      provide: NG_GAPI_CONFIG,
+      useValue: gapiClientConfig
+    }),
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.
@@ -75,16 +104,30 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     GroupComponent,
     TopBarComponent,
     GroupModalComponent,
-    IntroScreenComponent
+    IntroScreenComponent,
+    FolderSelectComponent,
+    SignInComponent
   ],
   bootstrap: [AppComponent],
   providers: [
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
-    }
+    },
+    { provide: APP_INITIALIZER, useFactory: initGapi, deps: [GapiSession], multi: true },
+    AppContext,
+    AppSession,
+    FileSession,
+    GapiSession,
+    UserSession,
+
+    AppRepository,
+    BreadCrumbSession,
+    FileRepository,
+    UserRepository,
+    LoggedInGuard
   ],
-  entryComponents: [GroupModalComponent]
+  entryComponents: [GroupModalComponent,FolderSelectComponent]
 })
 export class AppModule {
 }

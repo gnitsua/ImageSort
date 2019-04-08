@@ -1,4 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {FolderSelectComponent} from '../folder-select/folder-select.component';
 
 @Component({
   selector: 'app-top-bar',
@@ -9,7 +11,7 @@ export class TopBarComponent implements OnInit {
 
   @Output() addGroup = new EventEmitter<string>();
 
-  constructor() {
+  constructor(private modalService: NgbModal) {
   }
 
   ngOnInit() {
@@ -17,6 +19,11 @@ export class TopBarComponent implements OnInit {
 
   add() {
     this.addGroup.emit();
+  }
+
+  openSettings() {
+    const modalRef = this.modalService.open(FolderSelectComponent);
+    modalRef.componentInstance.name = 'World';
   }
 
 }

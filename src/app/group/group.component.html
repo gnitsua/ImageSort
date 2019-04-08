@@ -5,7 +5,7 @@
     <mat-card-title>
       <div [ngClass]="getGroupClass(level)" >
     <div class="mr-auto p-2 "> {{ (name.length>15)? (name | slice:0:15)+'&hellip;':(name) }}</div>
-    <div [ngClass]="hasChildren === true ||  level > 4 ? 'p-2 align-self-center disabled' :'p-2 align-self-center'" (click)="add(id)">
+    <div [ngClass]="hasChildren === true ||  level > 4 ? 'p-2 align-self-center disabled' :'p-2 align-self-center'" (click)="addNewChild()">
       <fa name="plus" ></fa>
     </div>
     <div [ngClass]="hasChildren === true ? 'p-2 align-self-center disabled' :'p-2 align-self-center'" (click)="delete(id)">

@@ -1,16 +1,18 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ImageItem} from '../models/image-item';
-import {GridsterConfig, GridsterItem, GridsterItemComponentInterface} from 'angular-gridster2';
+import {GridsterItem, GridsterItemComponentInterface} from 'angular-gridster2';
 import {HSLColor} from '../models/HSLColor';
 import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {GroupModalComponent} from '../group-modal/group-modal.component';
 import {ImagesService} from '../services/images.service';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {Image} from '../models/Image';
+import {FileInfo, MIME_TYPE_FOLDER} from '../models/fileInfo';
 
 @Component({
   selector: 'app-group',
   templateUrl: './group.component.html',
-  styleUrls: ['./group.component.css']
+  styleUrls: ['./group.component.css'],
+  providers: [ImagesService]
 })
 export class GroupComponent implements OnInit, GridsterItem {
 
@@ -23,7 +25,7 @@ export class GroupComponent implements OnInit, GridsterItem {
   @Input() name: string;
   @Input() id: string;
   @Input() color: HSLColor;
-  @Input() images: ImageItem[];
+  @Input() images: Image[];
   @Input() hasChildren: boolean;
   @Input() x: number;
   @Input() y: number;
@@ -40,48 +42,38 @@ export class GroupComponent implements OnInit, GridsterItem {
   minItemCols: number;
   minItemRows: number;
   closeResult: string;
-  options: GridsterConfig;
   @Output() deleteGroupItem = new EventEmitter<string>();
-  @Output() addGroupItem = new EventEmitter<string>();
+  @Output() addGroupItem = new EventEmitter<{group:string,childFolder:FileInfo}>();
 
 
   ngOnInit() {
-    // this.options = {
-    //   margin: 10,
-    //   minCols: 2,
-    //   maxCols: 4,
-    //   minRows: 1,
-    //   maxRows: 2,
-    //   fixedRowHeight:100,
-    //   fixedColWidth:100,
-    //   gridType: 'fit',
-    //   mobileBreakpoint: 0,
-    //   compactType: 'compactLeft&Up',
-    //   displayGrid: 'none',
-    // };
 
     this.compactEnabled = true;
     this.dragEnabled = false;
-    // initCallback: (item: GridsterItem, itemComponent: GridsterItemComponentInterface) => void;
     this.maxItemArea = 100;
     this.maxItemCols = 10;
     this.maxItemRows = 10;
     this.minItemArea = 10;
     this.minItemCols = 10;
     this.minItemRows = 10;
-    // this.getImages();
+    this.getImages();
+    // this.getChildren()
   }
 
   delete(groupId: string) {
     if (this.hasChildren === false) {//we are only allow to delete groups without children
-      this.images.map(imageItem => this.imageService.addImage(imageItem.image));// put all the images back into the image service
+      this.images.map(image => this.imageService.addImage(image));// put all the images back into the image service
       this.deleteGroupItem.emit(groupId);
     }
   }
 
-  add(groupId: string) {
+  addNewChild(){
+    this.imageService.createFolder("Group",this.id).then((res)=>{this.addChild(res);console.log(res)});
+  }
+
+  addChild(childFolder:FileInfo) {
     if (this.hasChildren === false && this.level < 5) {//we are only allow to delete groups without children
-      this.addGroupItem.emit(groupId);
+      this.addGroupItem.emit({group:this.id,childFolder:childFolder});
     }
   }
 
@@ -106,7 +98,7 @@ export class GroupComponent implements OnInit, GridsterItem {
   }
 
   getNumImagesToShow(level: number) {
-    return 100
+    return 100;
     if (level > 4) {
       return 1;
     } else if (level > 2) {
@@ -141,22 +133,32 @@ export class GroupComponent implements OnInit, GridsterItem {
     }
   }
 
-  // getImages(): void {
-  //   this.imageService.getImages()
-  //     .subscribe(images => this.images = images.map(image => new ImageItem(image)));
-  // }
+  getImages(): void {
+    this.imageService.observableImages
+      .subscribe(images => {this.images = images});//make sure this image is actually in this group
+
+    this.imageService.getImages(this.id);
+  }
+
+  getChildren(): Promise<void> {
+    return this.imageService.getFolders(this.id).then((folders:FileInfo[])=>{
+      if(folders.length > 0){// only add a max of one child
+        this.addChild(folders[0])
+      }
+    })
+  }
 
 
-  drop(event: CdkDragDrop<ImageItem[]>) {
+  drop(event: CdkDragDrop<Image[]>) {
     if (event.previousContainer !== event.container) {
       this.transferArrayItem(event.previousContainer.data, event.container.data,
         event.previousIndex, event.currentIndex);
     } else {
-      this.array_move(this.images, event.previousIndex, event.currentIndex);
+      // this.array_move(this.images, event.previousIndex, event.currentIndex);
     }
   }
 
-  transferArrayItem(srcContainer: Array<ImageItem>, dstContainer: Array<ImageItem>, srcIndex: number, dstIndex: number) {
+  transferArrayItem(srcContainer: Array<Image>, dstContainer: Array<Image>, srcIndex: number, dstIndex: number) {
     this.imageService.moveImages(srcIndex);
     const item = srcContainer.splice(srcIndex, 1)[0];
     // dstContainer.splice(dstIndex, 0, item);
