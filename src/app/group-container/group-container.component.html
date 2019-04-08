@@ -1,26 +1,15 @@
-<div style="height: 5%;">
-  <app-top-bar (addGroup)="addEmptyGroup($event)">
+<!--<app-top-bar (addGroup)="addEmptyGroup($event)">-->
 
-  </app-top-bar>
-</div>
-<div style="height: 95%">
-  <gridster [options]="options" style="width: 100%;height: 100%">
-    <gridster-item [item]="group" *ngFor="let group of groups">
-      <app-group [name]="group.name"
-                 [id]="group.id"
-                 [color]="group.color"
-                 [images]="group.images"
-                 [hasChildren]="group.childId !== undefined"
-                 [x]="group.x"
-                 [y]="group.y"
-                 [rows]="group.rows"
-                 [cols]="group.cols"
-                 [level]="group.level"
-                 (deleteGroupItem)="removeItem($event)"
-                 (addGroupItem)="addItem($event)"
-      >
-
-      </app-group>
-    </gridster-item>
-  </gridster>
+<!--</app-top-bar>-->
+<div style="height: 100%">
+  <div class="content"
+       fxLayout="{{getSplitDirection()}}"
+       fxFlexFill >
+    <div fxFlex="{{getGroupFlexHeight()}}" style="padding: 5px">
+      <app-group [group]="group"></app-group>
+    </div>
+    <div fxFlex="{{getGroupFlexHeight()}}" *ngFor="let child of group.children">
+      <app-group-container [group]="child"></app-group-container>
+    </div>
+  </div>
 </div>

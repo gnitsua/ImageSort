@@ -32,6 +32,7 @@ import {GroupModalComponent} from './group-modal/group-modal.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatButtonModule, MatCardModule, MatGridListModule} from '@angular/material';
 import { IntroScreenComponent } from './intro-screen/intro-screen.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -54,6 +55,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatGridListModule,
     MatCardModule,
     MatButtonModule,
+    FlexLayoutModule,
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.

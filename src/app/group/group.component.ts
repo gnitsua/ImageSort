@@ -6,84 +6,36 @@ import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {GroupModalComponent} from '../group-modal/group-modal.component';
 import {ImagesService} from '../services/images.service';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {Group} from '../models/group';
 
 @Component({
   selector: 'app-group',
   templateUrl: './group.component.html',
   styleUrls: ['./group.component.css']
 })
-export class GroupComponent implements OnInit, GridsterItem {
+export class GroupComponent implements OnInit {
 
+  @Input() group:Group;
+  closeResult:string;
 
   constructor(private modalService: NgbModal, private imageService: ImagesService) {
-
-
   }
-
-  @Input() name: string;
-  @Input() id: string;
-  @Input() color: HSLColor;
-  @Input() images: ImageItem[];
-  @Input() hasChildren: boolean;
-  @Input() x: number;
-  @Input() y: number;
-  @Input() cols: number;
-  @Input() rows: number;
-  @Input() level: number;
-  compactEnabled: boolean;
-  dragEnabled: boolean;
-  initCallback: (item: GridsterItem, itemComponent: GridsterItemComponentInterface) => void;
-  maxItemArea: number;
-  maxItemCols: number;
-  maxItemRows: number;
-  minItemArea: number;
-  minItemCols: number;
-  minItemRows: number;
-  closeResult: string;
-  options: GridsterConfig;
-  @Output() deleteGroupItem = new EventEmitter<string>();
-  @Output() addGroupItem = new EventEmitter<string>();
-
 
   ngOnInit() {
-    // this.options = {
-    //   margin: 10,
-    //   minCols: 2,
-    //   maxCols: 4,
-    //   minRows: 1,
-    //   maxRows: 2,
-    //   fixedRowHeight:100,
-    //   fixedColWidth:100,
-    //   gridType: 'fit',
-    //   mobileBreakpoint: 0,
-    //   compactType: 'compactLeft&Up',
-    //   displayGrid: 'none',
-    // };
-
-    this.compactEnabled = true;
-    this.dragEnabled = false;
-    // initCallback: (item: GridsterItem, itemComponent: GridsterItemComponentInterface) => void;
-    this.maxItemArea = 100;
-    this.maxItemCols = 10;
-    this.maxItemRows = 10;
-    this.minItemArea = 10;
-    this.minItemCols = 10;
-    this.minItemRows = 10;
-    // this.getImages();
   }
 
-  delete(groupId: string) {
-    if (this.hasChildren === false) {//we are only allow to delete groups without children
-      this.images.map(imageItem => this.imageService.addImage(imageItem.image));// put all the images back into the image service
-      this.deleteGroupItem.emit(groupId);
-    }
-  }
+  // delete(groupId: string) {
+  //   if (this.hasChildren === false) {//we are only allow to delete groups without children
+  //     this.images.map(imageItem => this.imageService.addImage(imageItem.image));// put all the images back into the image service
+  //     this.deleteGroupItem.emit(groupId);
+  //   }
+  // }
 
-  add(groupId: string) {
-    if (this.hasChildren === false && this.level < 5) {//we are only allow to delete groups without children
-      this.addGroupItem.emit(groupId);
-    }
-  }
+  // add(groupId: string) {
+  //   if (this.hasChildren === false && this.level < 5) {//we are only allow to delete groups without children
+  //     this.addGroupItem.emit(groupId);
+  //   }
+  // }
 
   getGroupClass(level: number) {
     if (level > 5) {
@@ -152,7 +104,7 @@ export class GroupComponent implements OnInit, GridsterItem {
       this.transferArrayItem(event.previousContainer.data, event.container.data,
         event.previousIndex, event.currentIndex);
     } else {
-      this.array_move(this.images, event.previousIndex, event.currentIndex);
+      this.array_move(this.group.images, event.previousIndex, event.currentIndex);
     }
   }
 
@@ -160,7 +112,7 @@ export class GroupComponent implements OnInit, GridsterItem {
     this.imageService.moveImages(srcIndex);
     const item = srcContainer.splice(srcIndex, 1)[0];
     // dstContainer.splice(dstIndex, 0, item);
-    this.images.unshift(item);//the dst container is not real
+    this.group.images.unshift(item);//the dst container is not real
   }
 
 
